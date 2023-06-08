@@ -1,0 +1,41 @@
+Link : https://leetcode.com/problems/count-the-number-of-complete-components/description/
+
+const int N=100;
+vector<int>adj[N];
+bool vis[N];
+int cur_number_of_nodes=0;
+int cur_number_of_edges=0;
+void dfs(int n){
+    vis[n]=1;
+    cur_number_of_nodes++;
+    for(auto u:adj[n]){
+        cur_number_of_edges++;
+        if(vis[u]){
+            continue;
+        }
+        dfs(u);
+    }
+}
+class Solution {
+public:
+    int countCompleteComponents(int n, vector<vector<int>>& edges) {
+        for(int i=0;i<n;i++){
+            adj[i].clear();
+        }
+        for(auto u:edges){
+            adj[u[0]].push_back(u[1]);
+            adj[u[1]].push_back(u[0]);
+        }
+        memset(vis,0,sizeof(vis));int res=0;
+        for(int i=0;i<n;i++){
+            if(!vis[i]){
+                dfs(i);
+                if(cur_number_of_edges==cur_number_of_nodes*(cur_number_of_nodes-1)){
+                    res++;
+                }
+                cur_number_of_edges=0;cur_number_of_nodes=0;
+            }
+        }
+        return res;
+    }
+};
