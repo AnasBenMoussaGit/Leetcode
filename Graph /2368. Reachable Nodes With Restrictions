@@ -1,0 +1,38 @@
+Link : https://leetcode.com/problems/reachable-nodes-with-restrictions/
+
+set<int>se;
+const int N=1e5+5;
+vector<int>adj[N];
+void addedge(int a,int b){
+    adj[a].push_back(b);
+    adj[b].push_back(a);
+}
+int res=0;
+void dfs(int n,int p){
+    res++;
+    for(auto u:adj[n]){
+        if(u==p||se.count(u)){
+            continue;
+        }
+        dfs(u,n);
+    }
+
+}
+class Solution {
+public:
+    int reachableNodes(int n, vector<vector<int>>& edges, vector<int>& restricted) {
+        se.clear();res=0;
+        for(auto u:restricted){
+            se.insert(u);
+        }
+        for(int i=0;i<=n;i++){
+            adj[i].clear();
+        }
+        for(auto u:edges){
+            int a=u[0];int b=u[1];
+            addedge(a,b);
+        }
+        dfs(0,-1);
+        return res;
+    }
+};
