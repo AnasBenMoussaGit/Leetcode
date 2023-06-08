@@ -1,0 +1,38 @@
+Link : https://leetcode.com/problems/redundant-connection/
+
+const int N=1005;
+int par[N];
+int getpar(int n){
+    if(n==par[n]){
+        return n;
+    }
+    return par[n]=getpar(par[n]);
+}
+void unite(int a,int b){
+    a=getpar(a);b=getpar(b);
+    if(a!=b){
+        par[b]=a;
+    }
+}
+bool sameset(int a,int b){
+    return(getpar(a)==getpar(b));
+}
+class Solution {
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        for(int i=1;i<=1001;i++){
+            par[i]=i;
+        }
+        vector<int>res;
+        for(auto u:edges){
+            int a=u[0];
+            int b=u[1];
+            if(sameset(a,b)){
+                res=u;
+                continue;
+            }
+            unite(a,b);
+        }
+        return res;   
+    }
+};
