@@ -1,0 +1,35 @@
+Link : https://leetcode.com/problems/number-of-islands/description/
+
+class Solution {
+public:
+    bool vis[305][305];
+    void solve(int r,int c,int x,int y,vector<vector<char>>& grid){
+        if(r<0||c<0||r>=x||c>=y){
+            return ;
+        }
+        if(vis[r][c]){
+            return ;
+        }
+        if(grid[r][c]=='0'){
+            return ;
+        }
+        vis[r][c]=1;
+        solve(r+1,c,x,y,grid);solve(r-1,c,x,y,grid);solve(r,c+1,x,y,grid);solve(r,c-1,x,y,grid);
+    }
+    int numIslands(vector<vector<char>>& grid) {
+        int y=grid[0].size();
+        int res=0;
+        for(int i=0;i<grid.size();i++){
+            for(int j=0;j<y;j++){
+                if(grid[i][j]=='0'){
+                    continue;
+                }
+                if(!vis[i][j]){
+                    solve(i,j,grid.size(),y,grid);
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+};
