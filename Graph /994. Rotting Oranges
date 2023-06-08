@@ -1,0 +1,73 @@
+Link : https://leetcode.com/problems/rotting-oranges/
+
+const int N=15;
+int dis[N][N];
+queue<pair<int,int>>q;
+int nx[4]={0,0,1,-1};
+int ny[4]={1,-1,0,0};
+int n;int m;
+bool isvalid(int x,int y){
+    return (x>=0&&y>=0&&x<n&&y<m);
+}
+void run_bfs(vector<vector<int>>& grid){
+    while(!q.empty()){
+        pair<int,int>u=q.front();
+        q.pop();
+        for(int i=0;i<4;i++){
+            int nxw=u.first+nx[i];
+            int nyw=u.second+ny[i];
+            if(isvalid(nxw,nyw)&&!grid[nxw][nyw]){
+                continue;
+            }
+            if(isvalid(nxw,nyw)&&dis[nxw][nyw]==-1){
+                dis[nxw][nyw]=dis[u.first][u.second]+1;
+                q.push({nxw,nyw});
+            }
+        }
+    }
+}
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        memset(dis,-1,sizeof(dis));int a=0;int b=0;
+        while(!q.empty()){
+            q.pop();
+        }
+        n=grid.size();
+        m=grid[0].size();
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==2){
+                    a++;
+                    dis[i][j]=0;
+                    q.push({i,j});
+                }
+                if(grid[i][j]==1){
+                    b++;
+                }
+            }
+        }
+        run_bfs(grid);bool ans=1;int res=-1;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j]==1&&dis[i][j]==-1){
+                    ans=0;
+                    break;
+                }
+                if(grid[i][j]==1){
+                    res=max(res,dis[i][j]);
+                }
+            } 
+        }
+        if(b==0){
+            return 0;
+        }
+        if(a==0&&b!=0){
+            return -1;
+        }
+        if(!ans){
+            return -1;
+        }
+        return res;
+    }
+};
