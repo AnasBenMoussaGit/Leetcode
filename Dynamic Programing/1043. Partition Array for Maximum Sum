@@ -1,0 +1,47 @@
+Link : https://leetcode.com/problems/partition-array-for-maximum-sum/description/
+
+#define ll long long 
+const int N=505;
+ll  tree[4*N];
+ll dp[N];
+void build(ll ind,ll l,ll r,vector<int>arr){
+    if(l==r){
+        tree[ind]=arr[l];
+        return ;
+    }
+    ll mid=(l+r)/2;
+    build(ind*2,l,mid,arr);
+    build(ind*2+1,mid+1,r,arr);
+    tree[ind]=max(tree[ind*2],tree[ind*2+1]);
+}
+ll query(ll ind,ll l,ll r,ll ql,ll qr){
+    if(l>qr||r<ql){
+        return -10;
+    }
+    if(ql<=l&&r<=qr){
+        return tree[ind];
+    }
+    int mid=(l+r)/2;
+    return max(query(ind*2,l,mid,ql,qr),query(ind*2+1,mid+1,r,ql,qr));
+}
+int getans(int l,int r,int n){
+    return query(1,0,n-1,l,r);
+}
+class Solution {
+public:
+    int maxSumAfterPartitioning(vector<int>& arr, int k) {
+        build(1,0,arr.size()-1,arr);
+        for(int i=0;i<arr.size();i++){
+            dp[i]=0;
+        }
+        for(int i=0;i<k;i++){
+            dp[i]=(i+1)*getans(0,i,arr.size());
+        }
+        for(int i=k;i<arr.size();i++){
+            for(int j=i-k+1;j<=i;j++){
+                dp[i]=max(dp[i],dp[j-1]+getans(j,i,arr.size())*(i-j+1));
+            }
+        }
+        return dp[arr.size()-1];        
+    }
+};
