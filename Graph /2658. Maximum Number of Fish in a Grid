@@ -1,0 +1,45 @@
+Link : https://leetcode.com/problems/maximum-number-of-fish-in-a-grid/
+
+#define ll long long 
+const int N=1e5+5;
+vector<int>adj[N];
+bool vis[N];
+long long  number_of_nodes=0;
+
+void dfs(int n){
+    vis[n]=1;number_of_nodes++;
+    for(auto u:adj[n]){
+        if(vis[u]){
+            continue;
+        }
+        dfs(u);
+    }
+}
+void init(int n){
+    for(int i=0;i<n;i++){
+        vis[i]=0;adj[i].clear();
+    }
+}
+void addedge(int a,int b){
+    adj[a].push_back(b);
+    adj[b].push_back(a);
+}
+class Solution {
+public:
+    long long countPairs(int n, vector<vector<int>>& edges) {
+        init(n);
+        long long res=(long long )n*(long long )(n-1)/2;long long ans=0;
+        for(auto u:edges){
+            addedge(u[0],u[1]);
+        }
+        for(int i=0;i<n;i++){
+            if(vis[i]){
+                continue;
+            }
+            dfs(i);
+            ans+=(number_of_nodes)*(number_of_nodes-1)/2;
+            number_of_nodes=0;
+        }
+        return res-ans;
+    }
+};
