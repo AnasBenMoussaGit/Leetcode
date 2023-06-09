@@ -1,0 +1,28 @@
+Link : https://leetcode.com/problems/number-of-dice-rolls-with-target-sum/description/
+
+int dp[35][1005];
+const int Mod=1e9+7;
+class Solution {
+public:
+    int numRollsToTarget(int n, int k, int target) {
+   //     f(i,j,s)//number of possbile ways to get sum equal to target 
+        //and on the ith roolI get j ;
+        //f(i,j,s)=f(i-1,s-j,s);
+        memset(dp,0,sizeof(dp));
+        for(int i=1;i<=k;i++){
+            dp[0][i]=1;
+        }
+        for(int i=1;i<n;i++){
+            for(int j=1;j<=k;j++){
+                for(int g=0;g<=target;g++){
+                    if(g>=j){
+                        dp[i][g]+=dp[i-1][g-j];
+                        dp[i][g]%=Mod;
+                    }     
+                }
+            }
+        }
+        return dp[n-1][target];
+    }
+    
+};
