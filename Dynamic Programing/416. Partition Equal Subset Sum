@@ -1,0 +1,29 @@
+Link : https://leetcode.com/problems/partition-equal-subset-sum/description/
+
+bool dp[205][20005];
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum=0;
+        memset(dp,0,sizeof(dp));
+        for(auto u:nums){
+            sum+=u;
+        }
+        if(sum%2==1){
+            return false;
+        }
+        int s=sum/2;
+        //f(i,sum)=whether there is a subsequence summing up to sum until index i
+        dp[0][nums[0]]=1;
+        for(int i=1;i<nums.size();i++){
+            for(int j=0;j<=20000;j++){
+                dp[i][j]|=dp[i-1][j];
+                if(j>=nums[i]){
+                    dp[i][j]|=dp[i-1][j-nums[i]];
+                }
+            }
+        }
+        return dp[nums.size()-1][s];
+
+    }
+};
